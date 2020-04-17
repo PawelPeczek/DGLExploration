@@ -82,8 +82,8 @@ used to generate snapshots
 * `--steps` is a number of simulation steps _(default: 100)_
 * `--snapshot_steps` are numbers of steps that simulation state snapshot will
 be taken (apart from the last step which is enabled by default). _(default: not set)_
-* `--transmission_probability` is a probability of virus transmission
-* `--initial_seek_people` is an initial number of people infected.
+* `--transmission_probability` is a probability of virus transmission. _(default: 0.5)_
+* `--initial_seek_people` is an initial number of people infected. _(default: 1)_
 
 
 #### Results
