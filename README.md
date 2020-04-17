@@ -65,7 +65,7 @@ _t+1_.
 #### Usage
 To run a simulation execute the following command:
 ```bash
-project_root$ python -m src.virus_simulation.execute \
+(DGLExploration) project_root$ python -m src.virus_simulation.execute \
     --map_size=100 \
     --people_number=100 \
     --simulation_name=test_simulation \
