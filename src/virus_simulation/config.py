@@ -1,0 +1,7 @@
+PERSON_ID_KEY = "person_id"
+SICKNESS_STATUS_KEY = "person_sick"
+MEETING_PAIR_KEY = "meeting_pair"
+MEETING_DURATION_KEY = "meeting_duration"
+MEETING_TIME_STAMP_KEY = "meeting_time_stamp"
+GRAPH_VERTICES_KEY = "people"
+GRAPH_EDGES_KEY = "meetings"
