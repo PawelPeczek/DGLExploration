@@ -73,11 +73,11 @@ staying at given position) - space borders cannot be crossed out;
 * At each simulation step each person decides (by random choice) where
 to go (only one step can be done); 
 * Group of people being in certain position in certain time will set up a 
-meeting. Each person can meet another from a group and the intensity of 
-pairwise meeting is measured by duration (random number from range [0.0; 1.0]);
+contact. Each person can meet another from a group and the intensity of 
+pairwise contact is measured by intensity (random number from range [0.0; 1.0]);
 * If within group there is a sick person - he/she may pass the virus to 
 another person - the actual probability of virus transmission is 
-calculated as meeting_duration * global_transition_probability and the 
+calculated as contact_intensity * global_transition_probability and the 
 transmission event is decided by a flip of Bayesian coin;
 * Each person infected in time stamp _t_, starts infecting from time stamp 
 _t+1_.
@@ -90,6 +90,7 @@ To run a simulation execute the following command:
     --people_number=100 \
     --simulation_name=test_simulation \
     --steps=200 \
+    --max_person_step_size=10
     --snapshot_steps 50 100 150 \
     --transmission_probability=0.75 \
     --initial_seek_people=1
@@ -100,6 +101,8 @@ Where:
 * `--simulation_name` is a distinguishable name of simulation that will be 
 used to generate snapshots
 * `--steps` is a number of simulation steps _(default: 100)_
+* `--max_person_step_size` is maximum distance (along each dimension) that a 
+simulated person can move in each simulation step _(default: 10)_
 * `--snapshot_steps` are numbers of steps that simulation state snapshot will
 be taken (apart from the last step which is enabled by default). _(default: not set)_
 * `--transmission_probability` is a probability of virus transmission. _(default: 0.5)_
@@ -113,34 +116,91 @@ One should expect results placed under location specified in
 The result format is the following:
 ```json
 {
+    "map_dimensions": [
+        50,
+        50
+    ],
     "people": [
         {
             "person_id": 0,
-            "person_sick": false
+            "person_sick": false,
+            "sickness_start": null
         },
         {
             "person_id": 1,
-            "person_sick": true
+            "person_sick": true,
+            "sickness_start": 37
         }
     ],
-    "meetings": [
+    "contacts": [
       {
-            "meeting_pair": [
+            "contact_pair": [
                 16,
                 34
             ],
-            "meeting_duration": 0.7409445831243038,
-            "meeting_time_stamp": 64
+            "contact_intensity": 0.7409445831243038,
+            "contact_time_stamp": 64
         },
         {
-            "meeting_pair": [
+            "contact_pair": [
                 22,
                 45
             ],
-            "meeting_duration": 0.6641336785359672,
-            "meeting_time_stamp": 64
+            "contact_intensity": 0.6641336785359672,
+            "contact_time_stamp": 64
         }
-    ]
-    
+    ],
+    "people_traces": {
+        "0": [
+            [
+                16,
+                50
+            ],
+            [
+                17,
+                44
+            ]
+        ]
+    }
 }
 ```
+General structure is the following:
+```
+{
+    map_dimensions: 2D size of simulation map
+    people: [
+        {
+            person_id: id of an individual
+            person_sick: True/False
+            sickness_start: time_stamp (simulation step) when sickness started
+        }
+    ]
+    contacts: [
+        {
+            contact_pair: Pair of person_id
+            contact_intensity: level of people exposure while contact
+            contact_time_stamp: time_stamp (simulation step) when contact occured
+        }
+    ]
+}
+```
+
+### Semi-supervised infected people detection
+#### Experiment description
+We are going to generate graph dataset of virus expansion in a population 
+(as described in __Virus expansion simulation__ section). Then we are aim to 
+prepare POC showing that with use of DGL and graph convolutional network (GCN) 
+it is possible to detect people that may be sick on the basis of record of 
+contacts between people when we are able to obtain a dose of tests results which 
+serves as a base for semi-supervised training. Such infected people detection
+can be useful (for instance while COVID-19 epidemic) as it could help to 
+isolate potentially sick people on the basis of mobile devices tracking.
+
+#### Experiment details
+See the [POC here](notebooks/01_DGLSemiSupervisedPredictionsOnVertices.ipynb).
+
+#### Results visualisation
+
+| Ground Truth        | Model result           |
+| ------------- |:-------------:|
+| ![](./notebooks/gt_graph.png)     | ![](./notebooks/animation.gif) |

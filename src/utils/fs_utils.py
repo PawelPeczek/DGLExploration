@@ -9,6 +9,11 @@ def dump_json_to_file(target_path: str, content: Union[list, dict]) -> None:
         json.dump(content, f, indent=4)
 
 
+def parse_json(json_path: str) -> Union[dict, list]:
+    with open(json_path, "r") as f:
+        return json.load(f)
+
+
 def create_parent_dir(path: str) -> None:
     parent_dir = os.path.dirname(path)
     parent_dir = os.path.abspath(parent_dir)

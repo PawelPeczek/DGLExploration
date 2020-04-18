@@ -71,6 +71,12 @@ if __name__ == '__main__':
         required=True
     )
     parser.add_argument(
+        "--max_person_step_size",
+        help="Max length of step in each direction.",
+        type=int,
+        default=10
+    )
+    parser.add_argument(
         "--steps",
         help="Number of steps to carry on the simulation.",
         type=int,
@@ -100,6 +106,7 @@ if __name__ == '__main__':
 
     simulation_engine = SimulationEngine.initialize(
         map_size=args.map_size,
+        max_person_step_size=args.max_person_step_size,
         people_number=args.people_number,
         initial_seek_people=args.initial_seek_people,
         transmission_probability=args.transmission_probability
