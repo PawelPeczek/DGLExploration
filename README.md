@@ -199,8 +199,27 @@ isolate potentially sick people on the basis of mobile devices tracking.
 #### Experiment details
 See the [POC here](notebooks/01_DGLSemiSupervisedPredictionsOnVertices.ipynb).
 
-#### Results visualisation
+#### Results
+
+__Visualisation:__
 
 | Ground Truth        | Model result           |
 | ------------- |:-------------:|
 | ![](./notebooks/gt_graph.png)     | ![](./notebooks/animation.gif) |
+
+
+__Vertices unsupervised features 2D t-SNE embedding:__
+
+![](./notebooks/features_embedding.png) 
+
+__Confusion matrix:__
+
+| | Predicted healthy          | Predicted sick           |
+| ------------- |:-------------:| -------------|
+| Healthy in simulation | 23            | 11           |
+| Sick in simulation | 4            | 12           |
+
+* TN:  23
+* FP:  11
+* FN:  4
+* TP:  12
