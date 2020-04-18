@@ -10,10 +10,16 @@ repository_root
 ├── README.md                                       project description
 ├── requirements.txt                                dependecies definition
 ├── requirements-gpu.txt                            dependecies definition (GPU version)
+├── report                                          directory where to place report files
+│   ├── generated                                   generated *.pdf files
+│   └── sources                                     LaTeX files
 ├── resources                                       directory where to place data to be sued
 ├── notebooks                                       Jupyter notebooks with some experiments results.
 └── src                                             main sources package
+    ├── utils                                       set of handy utils
+    ├── virus_simulation                            module with virus expansion simulation engine
     └── config.py                                   global config of a project
+    
 ```
 
 ## Setup
@@ -64,6 +70,10 @@ following command needs to be executed.
 ```
 
 ## Project details
+### Report
+Generated report (in a current form) can be seen [here](./report/generated/DGLExplorationReport.pdf).
+LaTeX sources are available [here](./report/sources).
+
 ### Virus expansion simulation
 #### Simulation rules
 Simulation rules are extremely simple:
@@ -197,7 +207,7 @@ can be useful (for instance while COVID-19 epidemic) as it could help to
 isolate potentially sick people on the basis of mobile devices tracking.
 
 #### Experiment details
-See the [POC here](notebooks/01_DGLSemiSupervisedPredictionsOnVertices.ipynb).
+See the [POC here](./notebooks/01_DGLSemiSupervisedPredictionsOnVertices.ipynb).
 
 #### Results
 
@@ -216,10 +226,10 @@ __Confusion matrix:__
 
 | | Predicted healthy          | Predicted sick           |
 | ------------- |:-------------:| -------------|
-| Healthy in simulation | 23            | 11           |
-| Sick in simulation | 4            | 12           |
+| __Healthy in simulation__ | 23            | 11           |
+| __Sick in simulation__ | 4            | 12           |
 
-* TN:  23
-* FP:  11
-* FN:  4
-* TP:  12
+* __TN__:  23
+* __FP__:  11
+* __FN__:  4
+* __TP__:  12
