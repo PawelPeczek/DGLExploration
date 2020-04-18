@@ -36,6 +36,26 @@ To set up the project:
     ```bash
     project_root$ pip install -r requirements-gpu.txt
     ```
+    Please note that according to [offcial pytorch documentation](https://pytorch.org/) 
+    CUDA support is available for CUDA 9.2 (legacy) and CUDA 10.1.
+    The strange issue that we could observe is that having installed CUDA 10.1
+    (according to nvidia-smi):
+    ```bash
+    nvidia-smi
+    Sat Apr 18 14:59:28 2020       
+    +-----------------------------------------------------------------------------+
+    | NVIDIA-SMI 430.40       Driver Version: 430.40       CUDA Version: 10.1     |
+    |-------------------------------+----------------------+----------------------+
+    ```
+    The local CUDA version works fine with PyTorch (and other DL libraries), but 
+    when DGL is installed with pip from ```dgl-cu100``` package there is an error
+    saying no libcublas.so.10.0 despite the fact that required shared library is 
+    present. The case may be that DGL looks for CUDA in fixed location per 
+    version (which is not suitable for the local set-up we tested the library 
+    on) instead to make use of __standard__ sym-link for CUDA which is 
+    ```/usr/local/cuda```. This is strange, as a common way to obtain knowledge 
+    about shared libraries locations from a code is to use ```LD_LIBRARY_PATH``` 
+    which was correctly set on the machine we executed test.
 ### Issues with jupyter notebook
 Sometimes, in order to make the environment visible in jupyter notebook, the 
 following command needs to be executed.
