@@ -24,7 +24,7 @@
   Wydział Informatyki, Elektroniki i Telekomunikacji\\
   Akademia Górniczo-Hutnicza \\
   Kraków \\
-  \texttt{zawalska@student.agh.edu.pl} \\
+  \texttt{jzawalska@student.agh.edu.pl} \\
   \And
  Gędłek Paweł \\
   Wydział Informatyki, Elektroniki i Telekomunikacji\\
@@ -54,11 +54,28 @@ Przetwarzanie grafów stanowi obecnie istotną cześć całości przetwarzania d
 \section{Struktura raportu}
 \label{sec:report_structure}
 \paragraph{}
-Organizacja niniejszego dokumentu jest następująca. Sekcja \ref{sec:intro} zawiera opis istoty działania biblioteki DGL \cite{dgl}. W sekcji \ref{sec:dgl_structure} znajduje się opis istotnych elementów struktury biblioteki i jej ocena. W dalszej kolejności, sekcja \ref{sec:experiments} zawiera podsumowanie eksperymentów, które zostały przeprowadzone z wykorzystaniem biblioteki DGL \cite{dgl}, ze szczególnym uwzględnieniem aspektów związanych z użytecznością różnych sposobów reprezentacji grafów oraz analizą jakości rozwiązań zaproponowanych przez twórców DGL \cite{dgl}. Całość raportu dopełniają wnioski wyciągnięte z przeprowadzonych badań, które są zaprezentowane w sekcji \ref{sec:conclusions}.
+Organizacja niniejszego dokumentu jest następująca. Sekcja \ref{sec:intro} zawiera opis istoty działania biblioteki DGL \cite{dgl}. W sekcji \ref{sec:dgl_structure} znajduje się opis istotnych elementów struktury biblioteki i jej ocena. Sekcja \ref{sec:dgl_system_requirements} prezentuje wymagania techniczne. W dalszej kolejności, sekcja \ref{sec:experiments} zawiera podsumowanie eksperymentów, które zostały przeprowadzone z wykorzystaniem biblioteki DGL \cite{dgl}, ze szczególnym uwzględnieniem aspektów związanych z użytecznością różnych sposobów reprezentacji grafów oraz analizą jakości rozwiązań zaproponowanych przez twórców DGL \cite{dgl}. Całość raportu dopełniają wnioski wyciągnięte z przeprowadzonych badań, które są zaprezentowane w sekcji \ref{sec:conclusions}.
 
 \section{Wstęp}
 \label{sec:intro}
 TODO + napisać jakiej wersji DGL dotyczy! + oprzeć się na GH - jest tam wiele informacji o wydajności, skalowaniu itp - warto to wrzucić. Warto wrzucić ogólne konkluzje z notebooka 00\_DGLIntroduction.ipynb odnośnie sposobu reprezentacji grafu itp.
+\paragraph{}
+DGL jest uważana za łatwą w użyciu, wydajną i skalowalną biblioteką języka Python do głębokiego uczenia na strukturze grafu.
+\paragraph{}
+Główne cechy DGL:
+\begin{itemize}
+  \item
+  integracja z wybranymi platformami do uczenia głębokiego - brak kosztów migracji, 
+  \item 
+  osiągnie wysokiej wydajności poprzez automatyczne grupowanie obliczeń i szybkie mnożenie macierzy rzadkich,
+  \item 
+  dobra skalowalność do wykresów z dziesiątkami milionów wierzchołków,
+  \item 
+  przejrzyste interfejsy dostępu do wierzchołków oraz krawędzi grafu, możliwość manipulacji strukturą grafu,
+  \item 
+  przekazywanie wiadomości (message passing) - zarówno niskopoziomowo np. przekazywanie informacji wzdłuż krawędzi i otrzymywanie ich na wybranych węzłach, jak i wysokopoziomowo np. aktualizowanie cech całego grafu.
+  
+ \end{itemize}
 
 \section{Struktura biblioteki}
 \label{sec:dgl_structure}
@@ -84,6 +101,26 @@ TODO + napisać jakiej wersji DGL dotyczy! + oprzeć się na GH - jest tam wiele
 \paragraph{}
 Biblioteka DGL \cite{dgl} prezentuje się zatem jako twór dość dobrze przemyślany, jednak wciąż posiadający sporo istotnych mankamentów utrudniających podstawowe wykorzystanie. Jednocześnie widać dość duże zainteresowanie społeczności i intensywny rozwój, co bardzo dobrze rokuje na przyszłość.
 
+\section{Wymagania techniczne}
+\label{sec:dgl_system_requirements}
+\begin{itemize}
+\item
+DGL w wersji \textbf{0.4.x} współpracuje z następującymi systemami operacyjnymi:
+\begin{itemize}
+  \item
+    Ubuntu 16.04    
+  \item
+    macOS X
+  \item
+   Windows 10
+ \end{itemize}
+\item
+Rekomendowana wersja języka to Python 3.5 lub nowszy (biblioteka nie była testowana dla wersji niższych i może nie być z nimi kompatybilna). 
+\item
+Zalecana instalacja przy użyciu systemu zarządzania pakietami \textit{pip} lub \textit{conda}. Istnieje także możliwość instalacji poprzez pobranie plików źródłowych z GitHub \cite{dgl_sources}.
+ \end{itemize}
+
+
 \section{Opis eksperymentów}
 \label{sec:experiments}
 \paragraph{}
@@ -101,6 +138,25 @@ Z technicznego punktu widzenia wykonanie eksperymentu było stosunkwo proste, ja
 
 \paragraph{}
 Wspomniany już wysoki poziom abstrakcji biblioteki DGL \cite{dgl} umożliwił sprawne wykonanie eksperymentu i jest cechą, którą należy rozpatrywać pozytywnie. Należy jednak pamiętać, że zbyt duży poziom abstrakcji w ogólnym przypadku powodować może utratę kontroli nad przebiegiem eksperymentu i przynieść skutki odwrotne do zamierzonych. Pod tym względem obawiać się można problemów analogicznych do tych, które występowały w bibliotece Keras \cite{keras} na początkowych etapach jej rowzoju (jak i wówczas kiedy była już oficjalnie częscią TensorFlow \cite{tf}). Problemy te objawiały się m. in. pojawiającymi się zakleszczeniami, czy wyciekami pamięci. Zauważyć jednak należy, że w przypadku DGL \cite{dgl} z wykorzystaniem biblioteki PyTorch \cite{torch} możliwa jest manualna kontrola procesu uczenia, która może niwelować szanse wystąpienia w/w problemów. Pomimo przedstawionych obaw. w ogólności działanie DGL \cite{dgl} w czasie eksperymentu ocenić należy bardzo dobrze.
+
+
+\subsection{Wykrywanie wspólnot (Community Detection)}
+\paragraph{}
+Wykrywanie wspólnot w sieci połączeń polega na odnajdywaniu podgrup odznaczających się wspólnymi cechami. Wspólnoty obejmują podgrafy sieci z wysoką liczbą połączeń pomiędzy wierzchołkami tego samego podgrafu i relatywnie mniejszą liczbą połączeń z wierzchołkami innych podgrafów. Struktura sieci nie wykazuje jednorodności, a raczej cechuje ją podział na klasy z wyższym prawdopodobieństwem połączeń między węzłami tej samej klasy niż między węzłami różnych klas \cite{community_detection}. Dla danej sieci reprezentowanej przez graf \(G = (V, E)\) , gdzie \(V\) jest zbiorem wierzchołków, a \(E\) zbiorem krawędzi, struktura wspólnoty to taki podział wierzchołków \(V\) na zbiory \(C = C_{1},..., C_{k}\) tak, że każdy \(C_{i}, 1 \leq i \leq	 k\) wykazuje strukturę wspólnoty reprezentujące grupy węzłów.
+
+\paragraph{}
+Do przykładów takich sieci można zaliczyć m.in. sieci społecznościowe, gdzie połączenia pokazują powiązania między osobami, systemy rekomendujące, w których połączenia pokazują interakcje między klientami a produktami i procesy analizy chemicznej, w której związki są modelowane jako połączenia atomów i wiązań \cite{network_community_detection}. Zrozumienie struktury sieci połączeń i wykrywanie wspólnot ma kluczowe znaczenie dla wydobycia przydatnych informacji. Dzięki poznaniu zależności pomiędzy poszczególnymi komponentami można wykorzystać posiadaną wiedzę np. w marketingu docelowym czy naukach o naturze. 
+
+\paragraph{}
+Biorąc pod uwagę, że interakcje między klientami a produktami są dobrym przykładem sieci umożliwiających wykrywanie wspólnot eksperyment został przeprowadzony na zbiorze danych Polbooks \cite{polbooks}. Zbiór ten reprezentuje sklasyfikowany zestaw książek o tematyce polityki USA. Został on stworzony na podstwie danych z serwisu Amazon.com zgodnie z powiązaniem: „klienci, którzy kupili tę książkę, również kupili te książki”. Składa się on z 105 książek i 441 powiązań pomiędzy nimi. 
+
+\paragraph{}
+Zadaniem eksperymentu było sprawdzenie czy biblioteka DGL, przy użyciu grafowych sieci konwolucyjnych i uczenia częściowo nadzorowanego, nadaje się do wykrywania wspólnot w danych o strukturze grafowej. Aby to zweryfikować stworzono dwa rozwiązania: pierwsze z małym podzbiorem zbioru Polbooks (12 książek i 25 połączeń między nimi, zachowując proporcje odpowiednich kategorii) oraz drugie z całością danych. Pierwszym krokiem było ustalenie jakie parametry GCN będą odpowiednie dla pierwszego rozwiązania, żeby zastosować je w większej skali (ze względu na to, że łatwiej obserwować trenowanie danych na mniejszej ich ilości). Drugim było zastosowanie wytworzonego modelu dla całości danych.
+
+
+\paragraph{}
+Niestety można mieć mieszane odczucia jeśli chodzi o korzystanie z tej biblioteki w celu wykonania tego zadania.
+Z jednej strony nie było problemów z integracją biblioteki PyTorch, konwersją grafu do i z obiektu biblioteki NetworkX oraz obsługą danych grafowych. Z drugiej jednak napotkano dość duże problemy z dobraniem prawidłowych parametrów modelu sieci, szczególnie dotyczących liczby wartw ukrytych oraz ich rozmiarów. Resumując, wydaje się że DGL to dobra biblioteka do realizacji zadania jakim jest wykrywanie wspólnot lecz metody jakie są przez nią udostępniane zmuszają do spędzenia dużej ilości czasu na dostrajaniu parametrów sieci, co nadaje to zastosowanie bardziej badawczo-naukowe niż gotowe do użycia w produkcji.
 
 \section{Wnioski}
 \label{sec:conclusions}
@@ -157,6 +213,21 @@ TODO
 Kipf T., Welling M.:
 \newblock Semi-Supervised Classification with Graph Convolutional Networks,
 \newblock {\em arxiv:1609.02907}, 2016
+
+\bibitem{community_detection} 
+Hric D., Darst R. K., Fortunato S.:
+\newblock Community detection in networks: Structural communities versus ground truth,
+\newblock {\em arXiv:1406.0146}, 2014
+
+\bibitem{network_community_detection} 
+Khan B. S., Niazi M. A.:
+\newblock Network Community Detection: A Review and Visual Survey,
+\newblock {\em arXiv:1708.00977}, 2017
+
+\bibitem{polbooks} 
+\newblock Polbooks dataset. 
+\newblock {\em http://www-personal.umich.edu/~mejn/netdata/polbooks.zip}
+
 \end{thebibliography}
 
 
