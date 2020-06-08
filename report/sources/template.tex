@@ -13,6 +13,7 @@
 \usepackage{microtype}      % microtypography
 \usepackage{lipsum}
 \usepackage{graphicx}
+\usepackage{subcaption}
 \graphicspath{ {./images/} }
 
 
@@ -58,7 +59,63 @@ Organizacja niniejszego dokumentu jest następująca. Sekcja \ref{sec:intro} zaw
 
 \section{Wstęp}
 \label{sec:intro}
-TODO + napisać jakiej wersji DGL dotyczy! + oprzeć się na GH - jest tam wiele informacji o wydajności, skalowaniu itp - warto to wrzucić. Warto wrzucić ogólne konkluzje z notebooka 00\_DGLIntroduction.ipynb odnośnie sposobu reprezentacji grafu itp.
+W naszym projekcie użyliśmy biblioteki DGL w wersji 0.43, można więc założyć, że w pewnym stopniu niektóre jej elementy są jeszcze w fazie eksperymentalnej. Świadczy o tym chociażby fakt, że w tej wersji API samplingu heterografów zostało wprowadzone jako experimental, a także został dodany support dla biblioteki Tensorflow.
+\paragraph{}
+Twórcy bibliotei DGL postanowili poddać ją testom wydajnościowym oraz skalowania. Używając funkcji tensorowych z backendowych frameworków takich jak PyTorch, MXNet, czy Tensorflow DGL w bardzo dużym stopniu optymalizuję zużycia pamięciowe i obliczeniowe, dzięki swoim własnym kernelom. Poniżej prezentujemy porównanie do innego podobnego pakietu PyTorch Geometric (PyG). W tabeli zostały umieszczone czasy w sekundach dla 200 epok oraz zużycie pamięci w GB.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c|c|c|c| } 
+Dataset  & Model                                             & Acurracy                      & \multicolumn{2}{c}{Time} & \multicolumn{2}{c}{Memory} \\
+         &                                                   &                               & PyG         & DGL        & PyG          & DGL         \\
+\hline
+Cora     & \begin{tabular}[c]{@{}l@{}}GCN\\ GAT\end{tabular} & \begin{tabular}[c]{@{}l@{}}$81.31 \pm 0.88$ \\ $83.98 \pm 0.52$\end{tabular} &       \begin{tabular}[c]{@{}l@{}} 0.478 \\ 1.608 \end{tabular}        &       \begin{tabular}[c]{@{}l@{}} 0.666 \\ 1.399 \end{tabular}       &       \begin{tabular}[c]{@{}l@{}} 1.1 \\ 1.2 \end{tabular}      &      \begin{tabular}[c]{@{}l@{}} 1.1 \\ 1.1 \end{tabular}           \\
+\hline
+CiteSeer & \begin{tabular}[c]{@{}l@{}}GCN\\ GAT\end{tabular} & \begin{tabular}[c]{@{}l@{}}$70.98 \pm 0.68$ \\ $69.96 \pm 0.53$\end{tabular} &        \begin{tabular}[c]{@{}l@{}} 0.490 \\ 0.674 \end{tabular}        &      \begin{tabular}[c]{@{}l@{}} 0.674 \\ 1.399 \end{tabular}       &       \begin{tabular}[c]{@{}l@{}} 1.1 \\ 1.3 \end{tabular}      &      \begin{tabular}[c]{@{}l@{}} 1.1 \\ 1.1 \end{tabular}           \\
+\hline
+PubMed   & \begin{tabular}[c]{@{}l@{}}GCN\\ GAT\end{tabular} & \begin{tabular}[c]{@{}l@{}}$79.00 \pm 0.41$ \\ $77.65 \pm 0.32$\end{tabular} &         \begin{tabular}[c]{@{}l@{}} 0.491 \\ 1.946 \end{tabular}       &      \begin{tabular}[c]{@{}l@{}} 0.690 \\ 1.393 \end{tabular}       &       \begin{tabular}[c]{@{}l@{}} 1.1 \\ 1.6 \end{tabular}      &      \begin{tabular}[c]{@{}l@{}} 1.1 \\ 1.1 \end{tabular}           \\
+\hline
+Reddit   & GCN                                               & $ 93.46 \pm 0.06$ &      OOM         &    28.6         &      OOM      &      11.7         \\
+\hline
+Reddit-S & GCN                                               & N/A &        29.12       &      9.44        &      15.7       &     3.6             
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=0.9\linewidth]{images/DGLvsPyG-time1.png}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=0.9\linewidth]{images/DGLvsPyG-time2.png}
+  \label{fig:sub2}
+\end{subfigure}
+\caption{Porównanie czasów dla obu bibliotek}
+\label{fig:test}
+\end{figure}
+
+W kwestii skalowalności biblioteka DGL wygląda naprawdę dobrze na tle konkurencji. W dużym stopniu wykorzystuję możliwości obliczeń na wielu GPU zarówno na jednej maszynie jak i na klastrach obliczeniowych, w celu przyspieszenia szybkości treningu. 
+
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=0.9\linewidth]{images/one-four-GPUs.png}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=0.9\linewidth]{images/one-four-GPUs-DGLvsGraphVite.png}
+  \label{fig:sub2}
+\end{subfigure}
+\caption{Skalowalność DGL na wielu GPU oraz porównanie skalowalności na tle innej biblioteki}
+\label{fig:test}
+\end{figure}
+
 \paragraph{}
 DGL jest uważana za łatwą w użyciu, wydajną i skalowalną biblioteką języka Python do głębokiego uczenia na strukturze grafu.
 \paragraph{}
@@ -93,7 +150,7 @@ Główne cechy DGL:
   
  \paragraph{}
 
- Od strony strukturalnej biblioteka prezentuje bardzo wysoki poziom przejrzystości, ktróry świadczy o dobrej organizacji źródeł. Niestety przyznać należy, że nie wszystko zostało przygotowane w sposób ułatwiający korzystanie. Podczas instalacji pakietu z pip zauważyć można, że zależności do bibliotek bazowych nie zostają zainstalowane. Wymaga to wiedzy odnośnie wersji tych bibliotek, które są wymagane do poprawnej pracy DGL \cite{dgl}. Co więcej podczas testów wystąpiły problemy ze współpracą ze współdzielonymi bibliotekami CUDA \cite{cuda}, który udało się rozwiązać przez zainstalowanie (w teorii) nieodpowiedniej wersji pakietu DGL \cite{dgl}.
+ Od strony strukturalnej biblioteka prezentuje bardzo wysoki poziom przejrzystości, który świadczy o dobrej organizacji źródeł. Niestety przyznać należy, że nie wszystko zostało przygotowane w sposób ułatwiający korzystanie. Podczas instalacji pakietu z pip zauważyć można, że zależności do bibliotek bazowych nie zostają zainstalowane. Wymaga to wiedzy odnośnie wersji tych bibliotek, które są wymagane do poprawnej pracy DGL \cite{dgl}. Co więcej podczas testów wystąpiły problemy ze współpracą ze współdzielonymi bibliotekami CUDA \cite{cuda}, który udało się rozwiązać przez zainstalowanie (w teorii) nieodpowiedniej wersji pakietu DGL \cite{dgl}.
 
  \paragraph{}
  Na poziomie struktury interfejs głownych obiektów udostępnianych przez DGL \cite{dgl} jest stosunkowo prosty i czytelny. Biblioteka udostępnia klasy reprezentujący graf (DGLGraph będąca klasą bazową oraz DGLHeteroGraph dla grafów z typowanymi wierzchołkami pozwalająca na uzyskanie podobnego gfrafu wiedzy jak w grafowych bazach danych). Za pomocą interfejsu tych klas dokonać można szeregu operacji włącznie z transformacjami, próbkowaniem i konwersja grafu do i z różnych formatów. Na pochwałę zasługuje wprowadzenie kownersji na i z obiektów biblioteki NetworkX \cite{nx}.  Na ogół udostępnione metody są zaprojektowane w sposób bardzo przemyślany. Niestety nie ma to zastosowania w każdym przypadku. Przykładem może być brak możliwości stworzenia obiektu grafu wprost z gęstej macierzy sąsiedztwa, czy konieczność stworzenia pustego obiektu celem użycia metody konwersji z macierzy rzadkiej. Rzeczą wprost niezrozumiałą jest jednak błąd który pojawia się w konwersji z i rzadką macierz sąsiedztwa. W tym wypadku odtworzenie grafu z jego własnej macierzy sąsiedztwa powoduje zamianę kierunku krawędzi na przeciwny.
@@ -152,7 +209,6 @@ Biorąc pod uwagę, że interakcje między klientami a produktami są dobrym prz
 
 \paragraph{}
 Zadaniem eksperymentu było sprawdzenie czy biblioteka DGL, przy użyciu grafowych sieci konwolucyjnych i uczenia częściowo nadzorowanego, nadaje się do wykrywania wspólnot w danych o strukturze grafowej. Aby to zweryfikować stworzono dwa rozwiązania: pierwsze z małym podzbiorem zbioru Polbooks (12 książek i 25 połączeń między nimi, zachowując proporcje odpowiednich kategorii) oraz drugie z całością danych. Pierwszym krokiem było ustalenie jakie parametry GCN będą odpowiednie dla pierwszego rozwiązania, żeby zastosować je w większej skali (ze względu na to, że łatwiej obserwować trenowanie danych na mniejszej ich ilości). Drugim było zastosowanie wytworzonego modelu dla całości danych.
-
 
 \paragraph{}
 Niestety można mieć mieszane odczucia jeśli chodzi o korzystanie z tej biblioteki w celu wykonania tego zadania.
